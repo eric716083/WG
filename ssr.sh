@@ -121,6 +121,7 @@ Set_iptables(){
 }
 # 讀取 配置信息
 Get_IP(){
+	yum install -y wget
 	ip=$(wget -qO- -t1 -T2 ipinfo.io/ip)
 	if [[ -z "${ip}" ]]; then
 		ip=$(wget -qO- -t1 -T2 api.ip.sb/ip)
