@@ -981,7 +981,7 @@ Uninstall_SSR(){
 			done
 			Save_iptables
 		fi
-		if [[ ! -z $(crontab -l | grep "ssrmu.sh") ]]; then
+		if [[ ! -z $(crontab -l | grep "SSR") ]]; then
 			crontab_monitor_ssr_cron_stop
 			Clear_transfer_all_cron_stop
 		fi
@@ -1393,11 +1393,11 @@ Clear_transfer_all(){
 }
 Clear_transfer_all_cron_start(){
 	crontab -l > "$file/crontab.bak"
-	sed -i "/ssrmu.sh/d" "$file/crontab.bak"
-	echo -e "\n${Crontab_time} /bin/bash $file/ssrmu.sh clearall" >> "$file/crontab.bak"
+	sed -i "/SSR/d" "$file/crontab.bak"
+	echo -e "\n${Crontab_time} /bin/bash $file/SSR clearall" >> "$file/crontab.bak"
 	crontab "$file/crontab.bak"
 	rm -r "$file/crontab.bak"
-	cron_config=$(crontab -l | grep "ssrmu.sh")
+	cron_config=$(crontab -l | grep "SSR")
 	if [[ -z ${cron_config} ]]; then
 		echo -e "${Error} 定時所有用戶流量清零啟動失敗 !" && exit 1
 	else
@@ -1406,10 +1406,10 @@ Clear_transfer_all_cron_start(){
 }
 Clear_transfer_all_cron_stop(){
 	crontab -l > "$file/crontab.bak"
-	sed -i "/ssrmu.sh/d" "$file/crontab.bak"
+	sed -i "/SSR/d" "$file/crontab.bak"
 	crontab "$file/crontab.bak"
 	rm -r "$file/crontab.bak"
-	cron_config=$(crontab -l | grep "ssrmu.sh")
+	cron_config=$(crontab -l | grep "SSR")
 	if [[ ! -z ${cron_config} ]]; then
 		echo -e "${Error} 定時所有用戶流量清零停止失敗 !" && exit 1
 	else
@@ -1704,7 +1704,7 @@ Set_config_connect_verbose_info(){
 }
 Set_crontab_monitor_ssr(){
 	SSR_installation_status
-	crontab_monitor_ssr_status=$(crontab -l|grep "ssrmu.sh monitor")
+	crontab_monitor_ssr_status=$(crontab -l|grep "SSR monitor")
 	if [[ -z "${crontab_monitor_ssr_status}" ]]; then
 		echo && echo -e "當前監控模式: ${Green_font_prefix}未開啟${Font_color_suffix}" && echo
 		echo -e "確定要開啟為 ${Green_font_prefix}ShadowsocksR服務端運行狀態監控${Font_color_suffix} 功能嗎？(當進程關閉則自動啟動SSR服務端)[Y/n]"
@@ -1746,11 +1746,11 @@ crontab_monitor_ssr(){
 }
 crontab_monitor_ssr_cron_start(){
 	crontab -l > "$file/crontab.bak"
-	sed -i "/ssrmu.sh monitor/d" "$file/crontab.bak"
-	echo -e "\n* * * * * /bin/bash $file/ssrmu.sh monitor" >> "$file/crontab.bak"
+	sed -i "/SSR monitor/d" "$file/crontab.bak"
+	echo -e "\n* * * * * /bin/bash $file/SSR monitor" >> "$file/crontab.bak"
 	crontab "$file/crontab.bak"
 	rm -r "$file/crontab.bak"
-	cron_config=$(crontab -l | grep "ssrmu.sh monitor")
+	cron_config=$(crontab -l | grep "SSR monitor")
 	if [[ -z ${cron_config} ]]; then
 		echo -e "${Error} ShadowsocksR服務端運行狀態監控功能 啟動失敗 !" && exit 1
 	else
@@ -1759,10 +1759,10 @@ crontab_monitor_ssr_cron_start(){
 }
 crontab_monitor_ssr_cron_stop(){
 	crontab -l > "$file/crontab.bak"
-	sed -i "/ssrmu.sh monitor/d" "$file/crontab.bak"
+	sed -i "/SSR monitor/d" "$file/crontab.bak"
 	crontab "$file/crontab.bak"
 	rm -r "$file/crontab.bak"
-	cron_config=$(crontab -l | grep "ssrmu.sh monitor")
+	cron_config=$(crontab -l | grep "SSR monitor")
 	if [[ ! -z ${cron_config} ]]; then
 		echo -e "${Error} ShadowsocksR服務端運行狀態監控功能 停止失敗 !" && exit 1
 	else
@@ -1770,14 +1770,14 @@ crontab_monitor_ssr_cron_stop(){
 	fi
 }
 Update_Shell(){
-	sh_new_ver=$(wget --no-check-certificate -qO- -t1 -T3 "https://raw.githubusercontent.com/eric716083/doubi/master/ssrmu.sh"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1) && sh_new_type="github"
+	sh_new_ver=$(wget --no-check-certificate -qO- -t1 -T3 "https://raw.githubusercontent.com/eric716083/doubi/master/SSR"|grep 'sh_ver="'|awk -F "=" '{print $NF}'|sed 's/\"//g'|head -1) && sh_new_type="github"
 	[[ -z ${sh_new_ver} ]] && echo -e "${Error} 無法鏈接到 Github !" && exit 0
 	if [[ -e "/etc/init.d/ssrmu" ]]; then
 		rm -rf /etc/init.d/ssrmu
 		Service_SSR
 	fi
 	cd "${file}"
-	wget -N --no-check-certificate "https://raw.githubusercontent.com/eric716083/doubi/master/ssrmu.sh" && chmod +x ssrmu.sh
+	wget -N --no-check-certificate "https://raw.githubusercontent.com/eric716083/doubi/master/SSR" && chmod +x SSR
 	echo -e "腳本已更新為最新版本[ ${sh_new_ver} ] !(註意：因為更新方式為直接覆蓋當前運行的腳本，所以可能下面會提示一些報錯，無視即可)" && exit 0
 }
 # 顯示 菜單狀態
